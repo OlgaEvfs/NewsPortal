@@ -11,7 +11,7 @@ class database {
         $this->host = 'localhost';
         $this->user = 'root';
         $this->password = '';
-        $this->baseName = 'newsportal';
+        $this->baseName = 'news_portal';
         $this->connect();
     }
     function __destruct() {
