@@ -24,3 +24,17 @@
     else{
         $response = Controller::error404();
     }
+    //----------------------register user
+elseif ($path == 'registerForm' ) {
+    // form register
+    $response = Controller::registerForm();
+}
+elseif ($path == 'registerAnswer' ) {
+    // register user
+    $response = Controller::registerUser();
+}
+
+//error page
+    else {
+        $response = Controller::error404();
+    }

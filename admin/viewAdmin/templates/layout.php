@@ -1,4 +1,4 @@
-<<html>
+<html>
     <head>
         <title>Dashboard</title>
         <link href="public/css/bootstrap.css" rel="stylesheet">
@@ -28,33 +28,31 @@
 
             if (isset($_SESSION["status"]) && $_SESSION["status"]=="admin"){
 
-                echo '<h4><a href="../" target=_blank>WEB SITE </a>';
-                echo '  &#187 <a href="categoryAdmin">Categories </a>';
-                echo '  &#187 <a href="newsAdmin">NewsList </a>';
-                
-                echo ' </h4>';
+            echo '<h4><a href="../" target=_blank>WEB SITE </a>';
+            echo '  &#187 <a href="categoryAdmin">Categories </a>';
+            echo '  &#187 <a href="newsAdmin">NewsList </a>';
+                    
+            echo ' </h4>';
             } else {
-                echo '<h4>У вас нет прав!</h4>';
+                   echo '<h4>У вас нет прав!</h4>';
             }
             ?>
 
-    <!-- -->
+        </div>
+        </nav>
+        </div>
+            <?php
+            }
+            ?>
 
-            </div>
-            </nav>
-            </div>
-                <?php
-                }
-                ?>
-    <!-- -->
-            <div id="content" style="padding-top:20px; ">
+          <div id="content" style="padding-top:20px; ">
 
                 <?php echo $content; ?>
-    <!-- -->
-            </div>
-            <footer class="footer">
+
+          </div>
+          <footer class="footer">
                 <p>&copy; 2025 Design Admin dashboard<i class="fa fa-child"></i></p>
-            </footer>
-        </div> <!-- /container --> |
+          </footer>
+        </div> <!-- /container --> 
     </body>
 </html>
