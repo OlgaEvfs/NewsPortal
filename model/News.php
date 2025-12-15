@@ -29,3 +29,4 @@ class News {
         return $n;
     }
 }
+?>

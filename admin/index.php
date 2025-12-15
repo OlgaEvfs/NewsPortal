@@ -1,8 +1,13 @@
 <?php
 session_start();
-    require_once '../inc/database.php';
+// session_destroy();
+    require_once '../inc/Database.php'; // подключение к БД
+
     include_once("modelAdmin/modelAdmin.php");
+    include_once("modelAdmin/modelAdminNews.php");
+
     include_once("controllerAdmin/controllerAdmin.php");
+    include_once("controllerAdmin/controllerAdminNews.php");
 
     include('routeAdmin/routingAdmin.php');//!!!
 

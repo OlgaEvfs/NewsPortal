@@ -7,9 +7,8 @@
     if($path == '' OR $path == 'index' OR $path == 'index.php'){
         $response = Controller::StartSite();
     }
-
     elseif($path == 'all') {
-        $response = Controller::StartSite();
+        $response = Controller::AllNews();
     }
     elseif($path == 'category' and isset($_GET['id'])) {
         $response = Controller::NewsByCatID($_GET['id']);
@@ -21,20 +20,20 @@
     {
         $response = Controller::InsertComment($_GET['comment'],$_GET['id']);
     }
+    //----------------------register user
+    elseif ($path == 'registerForm' ) 
+    {
+        // form register
+        $response = Controller::registerForm();
+    }
+    elseif ($path == 'registerAnswer' )
+    {
+        // register user
+        $response = Controller::registerUser();
+    }
+
+    // error page
     else{
         $response = Controller::error404();
     }
-    //----------------------register user
-elseif ($path == 'registerForm' ) {
-    // form register
-    $response = Controller::registerForm();
-}
-elseif ($path == 'registerAnswer' ) {
-    // register user
-    $response = Controller::registerUser();
-}
-
-//error page
-    else {
-        $response = Controller::error404();
-    }
+    

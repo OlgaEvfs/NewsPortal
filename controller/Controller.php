@@ -37,7 +37,7 @@ class Controller {
         // $c-текст комментария, $id-номер новости, для которой добавлен комментарий
     }
 
-// список комментариев
+    // список комментариев
     public static function Comments($newsid) {
         $arr = Comments::getCommentByNewsID($newsid);
         ViewComments::CommentsByNews($arr);
@@ -56,12 +56,12 @@ class Controller {
 
     }
     // Регистрация
-    public function registerForm() {
+    public static function registerForm() {
         include_once('view/formRegister.php');
     }
-    public function registerUser() {
-        $result = Register::registerUser();
-        include_once('view/answerRegister.php');
+    public static function registerUser() {
+        $register = new Register();
+        return $register->registerUser();
     }
 
 
