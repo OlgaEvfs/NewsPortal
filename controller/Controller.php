@@ -60,8 +60,8 @@ class Controller {
         include_once('view/formRegister.php');
     }
     public static function registerUser() {
-        $register = new Register();
-        return $register->registerUser();
+        $result = Register::registerUser();
+        include_once('view/answerRegister.php');
     }
 
 
