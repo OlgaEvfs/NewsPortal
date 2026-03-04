@@ -1,0 +1,20 @@
+# Зависимости Composer
+/vendor/
+composer.lock
+
+# Кэш PHPUnit
+.phpunit.result.cache
+/tests/_output/
+/tests/_support/_generated/
+
+# Временные файлы системы и IDE
+.idea/
+.vscode/
+*.swp
+*.log
+.DS_Store
+Thumbs.db
+
+# Специфичные файлы XAMPP/PHP
+php_errors.log
+.env

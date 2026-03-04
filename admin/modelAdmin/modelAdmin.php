@@ -4,38 +4,41 @@ class modelAdmin {
     public static function userAuthentication()
     {
         if (isset($_SESSION['sessionId'])) {
-            $logIn = true;
+            return true;
         }
-        else {
-            $logIn = false;
-            if(isset($_POST['btnLogin'])) {
-                if (isset($_POST['email']) && isset($_POST['password']) && $_POST['email']!="" && $_POST['password']!="") {
-                    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-                    $password = filter_input(INPUT_POST, 'password');
-                    $sql = 'SELECT * FROM `users` WHERE `email` ="'.$email.'"';
-                    $db = new database();
-                    $item = $db->getOne($sql);
 
-                    if ($item != null) {
-                        $loginEmail = strtolower($_POST['email']);
-                        $password = $_POST['password'];
-                        if ($loginEmail == $item['email'] && password_verify($password,
-                        $item['password']))
-                        {
-                            $_SESSION['sessionId']=session_id();
-                            $_SESSION['userId']=$item['id'];
-                            $_SESSION['name']=$item['username'];
-                            $_SESSION['status']=$item['status'];
-                            $logIn = true;
-                        }
-                    }
+        if(isset($_POST['btnLogin'])) {
+            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+            $password = $_POST['password'] ?? '';
+            
+            if ($email && $password) {
+                $db = new database();
+                $user = self::verifyUserCredentials($email, $password, $db);
+                
+                if ($user) {
+                    $_SESSION['sessionId'] = session_id();
+                    $_SESSION['userId'] = $user['id'];
+                    $_SESSION['name'] = $user['username'];
+                    $_SESSION['status'] = $user['status'];
+                    return true;
                 }
             }
         }
-        return $logIn;
-        //https://php.ru/manual/function.password-hash.html
-        //https://php.ru/manual/function.password-verify.html
+        return false;
     }
+
+    // Чистая логика проверки учетных данных (ДЛЯ ТЕСТОВ)
+    public static function verifyUserCredentials($email, $password, $db) {
+        $email = strtolower($email);
+        $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
+        $user = $db->getOne($sql);
+
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
+        }
+        return false;
+    }
+
 // ВЫХОД ИЗ АДМИНКИ
     public static function userLogout()
     {
@@ -43,8 +46,9 @@ class modelAdmin {
         unset($_SESSION['userId']);
         unset($_SESSION['name']);
         unset($_SESSION['status']);
-        session_destroy();
-        return;
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
     }
 }
 ?>

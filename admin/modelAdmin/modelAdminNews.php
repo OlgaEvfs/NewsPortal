@@ -1,89 +1,107 @@
 <?php
 class modelAdminNews {
 
-    public static function getNewsList() {
-        $query = "SELECT news.*, category.name,users.username from news,
-        category,users WHERE news.category_id=category.id AND
+    public static function getNewsList($db = null) {
+        $db = $db ?? new Database();
+        $query = "SELECT news.*, category.name, users.username FROM news,
+        category, users WHERE news.category_id=category.id AND
         news.user_id=users.id ORDER BY `news`.`id` DESC";
-        $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
+        return $db->getAll($query);
     }
-    //------Add
+
+    // Основной метод для вызова из контроллера
     public static function getNewsAdd() {
-        $test = false;
         if (isset($_POST['save'])) {
-            if (isset($_POST['title']) && isset($_POST['text']) && isset($_POST['idCategory']) ) {
-
-                $title = $_POST['title'];
-                $text = $_POST['text'];
-                $idCategory = $_POST['idCategory'];
-
-                //-------------images type blob
-                    $image = addslashes (file_get_contents($_FILES['picture']['tmp_name']));
-                //----------------
-                $sql = "INSERT INTO `news` (`id`, `title`, `text`, `picture`, `category_id`, `user_id`) VALUES (NULL, '$title', '$text', '$image', '$idCategory', '1')";
-                $db = new Database();
-                $item = $db->executeRun($sql);
-                if ($item == true) {
-                    $test = true;
-                }
+            $title = $_POST['title'] ?? '';
+            $text = $_POST['text'] ?? '';
+            $idCategory = $_POST['idCategory'] ?? 0;
+            
+            $image = "";
+            if (isset($_FILES['picture']['tmp_name']) && $_FILES['picture']['tmp_name'] != "") {
+                $image = addslashes(file_get_contents($_FILES['picture']['tmp_name']));
             }
-        }
-        return $test;
-    }
-    //----------news detail id
-    public static function getNewsDetail($id) {
-        $query = "SELECT news.*, category.name,users.username from news, category,users WHERE news.category_id=category_id AND news.user_id=users.id and news.id=".$id;
-        $db = new Database();
-        $arr = $db->getOne($query);
-        return $arr;
-    }
-    //----------news edit
-    public static function getNewsEdit($id) {
-        $test = false;
-        if (isset($_POST['save'])) {
-            if (isset($_POST['title']) && isset($_POST['text']) && isset($_POST['idCategory'])) {
-                $title = $_POST['title'];
-                $text = $_POST['text'];
-                $idCategory = $_POST['idCategory'];
-                //-------------images type blob
-                $image = $_FILES['picture']['name'];
-                if ($image != "") {
-                    $image = addslashes(file_get_contents($_FILES['picture']['tmp_name']));
-                /*  //------------images type text
-                    $uploaddir = '../images/';
-                    $uploadfile = $uploaddir . basename($_FILES['picture']['name']);
-                    copy($_FILES['picture']['tmp_name'], $uploadfile); */
-                }
-                //-------------------------
-                if ($image == "") {
-                    $sql = "UPDATE `news` SET `title` = '$title', `text` = '$text', `category_id` = '$idCategory' WHERE `news`.`id` = ".$id;
-                }
-                else {
-                    $sql = "UPDATE `news` SET `title` = '$title', `text` = '$text', `picture` = '$image', `category_id` = '$idCategory' WHERE `news`.`id` = ".$id;
-                }
-                        $db = new Database();
-                        $item = $db->executeRun($sql);
-                    if ($item == true) {
-                        $test = true;
-                    }
-                
-            }
-        }
-        return $test;
-    }
-    //-----------news delete
-    public static function getNewsDelete($id) {
-        $test = false;
-        if (isset($_POST['save'])) {
-            $sql = "DELETE FROM `news` WHERE `news`.`id` = ".$id;
+
             $db = new Database();
-            $item = $db->executeRun($sql);
-            if ($item == true) {
-                $test = true;
-            }
-        return $test;
+            return self::processNewsAdd($title, $text, $idCategory, $image, $db);
         }
+        return false;
+    }
+
+    // Чистая логика добавления (ДЛЯ ТЕСТОВ)
+    public static function processNewsAdd($title, $text, $idCategory, $image, $db) {
+        if (empty($title) || empty($text) || empty($idCategory)) {
+            return false;
+        }
+
+        $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+        $idCategory = (int)$idCategory;
+        
+        $sql = "INSERT INTO `news` (`id`, `title`, `text`, `picture`, `category_id`, `user_id`) 
+                VALUES (NULL, '$title', '$text', '$image', '$idCategory', '1')";
+        
+        return $db->executeRun($sql);
+    }
+
+    public static function getNewsDetail($id, $db = null) {
+        $db = $db ?? new Database();
+        $id = (int)$id;
+        $query = "SELECT news.*, category.name, users.username FROM news, category, users 
+                  WHERE news.category_id=category.id AND news.user_id=users.id AND news.id=$id";
+        return $db->getOne($query);
+    }
+
+    // Основной метод для редактирования
+    public static function getNewsEdit($id) {
+        if (isset($_POST['save'])) {
+            $title = $_POST['title'] ?? '';
+            $text = $_POST['text'] ?? '';
+            $idCategory = $_POST['idCategory'] ?? 0;
+            
+            $image = "";
+            if (isset($_FILES['picture']['tmp_name']) && $_FILES['picture']['tmp_name'] != "") {
+                $image = addslashes(file_get_contents($_FILES['picture']['tmp_name']));
+            }
+
+            $db = new Database();
+            return self::processNewsEdit($id, $title, $text, $idCategory, $image, $db);
+        }
+        return false;
+    }
+
+    // Чистая логика редактирования (ДЛЯ ТЕСТОВ)
+    public static function processNewsEdit($id, $title, $text, $idCategory, $image, $db) {
+        if (empty($title) || empty($text) || empty($idCategory)) {
+            return false;
+        }
+
+        $id = (int)$id;
+        $idCategory = (int)$idCategory;
+        $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+
+        if ($image == "") {
+            $sql = "UPDATE `news` SET `title` = '$title', `text` = '$text', `category_id` = '$idCategory' 
+                    WHERE `news`.`id` = $id";
+        } else {
+            $sql = "UPDATE `news` SET `title` = '$title', `text` = '$text', `picture` = '$image', `category_id` = '$idCategory' 
+                    WHERE `news`.`id` = $id";
+        }
+
+        return $db->executeRun($sql);
+    }
+
+    // Удаление
+    public static function getNewsDelete($id) {
+        if (isset($_POST['save'])) {
+            $db = new Database();
+            return self::processNewsDelete($id, $db);
+        }
+        return false;
+    }
+
+    // Чистая логика удаления (ДЛЯ ТЕСТОВ)
+    public static function processNewsDelete($id, $db) {
+        $id = (int)$id;
+        $sql = "DELETE FROM `news` WHERE `news`.`id` = $id";
+        return $db->executeRun($sql);
     }
 }// class

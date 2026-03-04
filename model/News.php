@@ -1,32 +1,30 @@
 <?php
 class News {
 
-    public static function getLast10News() {
+    public static function getLast10News($db = null) {
+        $db = $db ?? new Database();
         $query = "SELECT * FROM news ORDER BY id DESC LIMIT 3";
-        $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
+        return $db->getAll($query);
     }
 
-    public static function getAllNews() {
+    public static function getAllNews($db = null) {
+        $db = $db ?? new Database();
         $query = "SELECT * FROM news ORDER BY id DESC";
-        $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
+        return $db->getAll($query);
     }
 
-    public static function getNewsByCategoryID($id) {
-        $query = "SELECT * FROM news where category_id=".(string)$id." ORDER BY id DESC";
-        $db = new Database();
-        $arr = $db->getAll($query);
-        return $arr;
+    public static function getNewsByCategoryID($id, $db = null) {
+        $db = $db ?? new Database();
+        $id = (int)$id; // Безопасность: приведение к числу
+        $query = "SELECT * FROM news where category_id=$id ORDER BY id DESC";
+        return $db->getAll($query);
     }
 
-    public static function getNewsByID($id) {
-        $query = "SELECT * FROM news where id=".(string)$id;
-        $db = new Database();
-        $n = $db->getOne($query);
-        return $n;
+    public static function getNewsByID($id, $db = null) {
+        $db = $db ?? new Database();
+        $id = (int)$id; // Безопасность: приведение к числу
+        $query = "SELECT * FROM news where id=$id";
+        return $db->getOne($query);
     }
 }
 ?>
