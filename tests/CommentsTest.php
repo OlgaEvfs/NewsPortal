@@ -7,7 +7,7 @@ require_once 'inc/Database.php';
 class CommentsTest extends TestCase
 {
     /**
-     * Тест: Очистка текста от опасных тегов (XSS Protection)
+     * Test: Clearing text from dangerous tags (XSS Protection)
      */
     public function testXssProtection()
     {
@@ -20,22 +20,22 @@ class CommentsTest extends TestCase
     }
 
     /**
-     * Тест: Запрет пустого комментария
+     * Test: Prohibiting empty comment
      */
     public function testEmptyCommentValidation()
     {
-        $this->assertFalse(Comments::validateComment("   ")); // Пробелы
-        $this->assertFalse(Comments::validateComment(""));    // Пустота
+        $this->assertFalse(Comments::validateComment("   ")); // Spaces
+        $this->assertFalse(Comments::validateComment(""));    // Empty
     }
 
     /**
-     * Тест: Успешная вставка комментария
+     * Test: Successful comment insertion
      */
     public function testInsertCommentSuccess()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Ожидаем, что БД выполнит запрос и вернет true
+        // Expect the DB to execute the query and return true
         $dbMock->expects($this->once())
                ->method('executeRun')
                ->willReturn(true);
@@ -46,13 +46,13 @@ class CommentsTest extends TestCase
     }
 
     /**
-     * Тест: Получение количества комментариев
+     * Test: Getting comments count
      */
     public function testGetCommentsCount()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Имитируем ответ от БД (как в методе getOne)
+        // Simulate response from DB (as in getOne method)
         $dbMock->method('getOne')
                ->willReturn(['count' => 12]);
 

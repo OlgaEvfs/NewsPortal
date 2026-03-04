@@ -19,16 +19,24 @@ class Register {
         $errorString = "";
 
         if (!$email) {
-            $errorString .= "Неправильный email<br />";
+            $errorString .= "Incorrect email<br />";
         }
         if (!$password || !$confirm || mb_strlen($password) < 6) {
-            $errorString .= "Пароль должен быть больше 6 символов <br />";
+            $errorString .= "Password must be more than 6 characters<br />";
         }
         if ($password != $confirm) {
-            $errorString .= "Пароли не совпадают<br />";
+            $errorString .= "Passwords do not match<br />";
         }
 
         if (mb_strlen($errorString) == 0) {
+            // Check if email already exists
+            $checkSql = "SELECT * FROM `users` WHERE `email` = '$email'";
+            $existingUser = $db->getOne($checkSql);
+
+            if ($existingUser) {
+                return array(0 => false, 1 => "This email is already registered.<br />");
+            }
+
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             $date = date("Y-m-d");
 
@@ -40,7 +48,7 @@ class Register {
             if ($item) {
                 return array(0 => true);
             } else {
-                return array(0 => false, 1 => 'Ошибка базы данных');
+                return array(0 => false, 1 => 'Database error');
             }
         } else {
             return array(0 => false, 1 => $errorString);

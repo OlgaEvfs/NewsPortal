@@ -8,14 +8,14 @@
             if ($test == true) {
                 ?>
                 <div class="alert alert-info">
-                    <strong>Запись удалена.</strong><a href="newsAdmin">Список новостей</a>
+                    <strong>The entry has been deleted.</strong><a href="newsAdmin">News list</a>
                 </div>
             <?php
             }
             else if ($test == false) {
                 ?>
                 <div class="alert alert-warning">
-                    <strong>Ошибка удаления записи!</strong><a href="newsAdmin">Список новостей</a>
+                    <strong>Error deleting record!</strong><a href="newsAdmin">News list</a>
                 </div>
             <?php
             }
@@ -60,10 +60,10 @@
                       <tr>
                         <td colspan="2">
                             <button type="submit" class="btn btn-primary" name="save">
-                                <span class="glyphicon glyphicon-plus"></span>Удалить
+                                <span class="glyphicon glyphicon-plus"></span>Delete
                             </button>
                             <a href="newsAdmin" class="btn btn-large btn-success">
-                                <i class="glyphicon glyphicon-backward"></i> &nbsp;Назад к списку
+                                <i class="glyphicon glyphicon-backward"></i> &nbsp;Back to List
                             </a>
                         </td>
                       </tr>

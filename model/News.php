@@ -15,14 +15,14 @@ class News {
 
     public static function getNewsByCategoryID($id, $db = null) {
         $db = $db ?? new Database();
-        $id = (int)$id; // Безопасность: приведение к числу
+        $id = (int)$id; // Security: casting to integer
         $query = "SELECT * FROM news where category_id=$id ORDER BY id DESC";
         return $db->getAll($query);
     }
 
     public static function getNewsByID($id, $db = null) {
         $db = $db ?? new Database();
-        $id = (int)$id; // Безопасность: приведение к числу
+        $id = (int)$id; // Security: casting to integer
         $query = "SELECT * FROM news where id=$id";
         return $db->getOne($query);
     }

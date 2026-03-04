@@ -7,44 +7,44 @@ require_once 'inc/Database.php';
 class NewsTest extends TestCase
 {
     /**
-     * Тест: Успешное получение списка новостей
+     * Test: Successful retrieval of news list
      */
     public function testGetAllNews()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Имитируем, что БД вернула массив из двух новостей
+        // Simulate that the DB returned an array of two news items
         $testData = [
-            ['id' => 1, 'title' => 'Новость 1', 'text' => 'Текст 1'],
-            ['id' => 2, 'title' => 'Новость 2', 'text' => 'Текст 2'],
+            ['id' => 1, 'title' => 'News 1', 'text' => 'Text 1'],
+            ['id' => 2, 'title' => 'News 2', 'text' => 'Text 2'],
         ];
 
         $dbMock->expects($this->once())
                ->method('getAll')
-               ->with($this->stringContains('SELECT * FROM news')) // Проверяем, что SQL правильный
+               ->with($this->stringContains('SELECT * FROM news')) // Check that the SQL is correct
                ->willReturn($testData);
 
         $result = News::getAllNews($dbMock);
 
-        $this->assertCount(2, $result); // Проверяем, что получили именно 2 новости
-        $this->assertEquals('Новость 1', $result[0]['title']);
+        $this->assertCount(2, $result); // Check that exactly 2 news items were received
+        $this->assertEquals('News 1', $result[0]['title']);
     }
 
     /**
-     * Тест: Проверка безопасности (SQL Injection Prevention)
-     * Мы передаем плохую строку, но ожидаем, что в SQL попадет только число
+     * Test: Security check (SQL Injection Prevention)
+     * We pass a bad string but expect only a number to get into the SQL
      */
     public function testGetNewsByIdSecurity()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Передаем "злой" ID
+        // Pass an "evil" ID
         $evilId = "5; DROP TABLE users";
 
-        // Ожидаем, что в метод getOne придет SQL, где id = 5 (после (int) приведения)
+        // Expect SQL where id = 5 (after (int) casting) to come into the getOne method
         $dbMock->expects($this->once())
                ->method('getOne')
-               ->with($this->stringContains('id=5')) // Должно стать просто 5
+               ->with($this->stringContains('id=5')) // Should become just 5
                ->willReturn(['id' => 5, 'title' => 'Secure News']);
 
         $result = News::getNewsByID($evilId, $dbMock);
@@ -53,13 +53,13 @@ class NewsTest extends TestCase
     }
 
     /**
-     * Тест: Если новости не существует
+     * Test: If news does not exist
      */
     public function testGetNewsByIdNotFound()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Имитируем, что БД ничего не нашла
+        // Simulate that the DB found nothing
         $dbMock->method('getOne')->willReturn(null);
 
         $result = News::getNewsByID(999, $dbMock);

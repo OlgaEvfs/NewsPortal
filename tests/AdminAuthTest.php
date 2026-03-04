@@ -7,17 +7,17 @@ require_once 'inc/Database.php';
 class AdminAuthTest extends TestCase
 {
     /**
-     * Тест: Успешная авторизация (верные логин и пароль)
+     * Test: Successful authorization (correct login and password)
      */
     public function testVerifyUserCredentialsSuccess()
     {
         $dbMock = $this->createMock(database::class);
 
-        // Хешируем тестовый пароль
+        // Hash the test password
         $testPassword = 'adminPassword123';
         $hashedPassword = password_hash($testPassword, PASSWORD_DEFAULT);
 
-        // Настраиваем Mock, чтобы он вернул данные пользователя
+        // Set up Mock to return user data
         $dbMock->expects($this->once())
                ->method('getOne')
                ->willReturn([
@@ -35,13 +35,13 @@ class AdminAuthTest extends TestCase
     }
 
     /**
-     * Тест: Ошибка авторизации (неверный пароль)
+     * Test: Authorization error (wrong password)
      */
     public function testVerifyUserCredentialsWrongPassword()
     {
         $dbMock = $this->createMock(database::class);
 
-        // Хешируем один пароль, а вводить будем другой
+        // Hash one password and input another
         $hashedPassword = password_hash('correctPassword', PASSWORD_DEFAULT);
 
         $dbMock->method('getOne')->willReturn([
@@ -50,20 +50,20 @@ class AdminAuthTest extends TestCase
             'password' => $hashedPassword
         ]);
 
-        // Пытаемся зайти с неправильным паролем
+        // Try to log in with the wrong password
         $result = modelAdmin::verifyUserCredentials('admin@test.com', 'wrongPassword', $dbMock);
 
         $this->assertFalse($result);
     }
 
     /**
-     * Тест: Ошибка авторизации (пользователь не найден)
+     * Test: Authorization error (user not found)
      */
     public function testVerifyUserCredentialsUserNotFound()
     {
         $dbMock = $this->createMock(database::class);
 
-        // БД возвращает null
+        // DB returns null
         $dbMock->method('getOne')->willReturn(null);
 
         $result = modelAdmin::verifyUserCredentials('missing@user.com', 'anyPassword', $dbMock);

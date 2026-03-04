@@ -6,7 +6,7 @@ if (isset($result)) {
         ?>
             <div class="container">
                 <div class="alert alert-info">
-                    <strong>Пользователь добавлен. </strong><a href="admin/"> Dashboard</a>
+                    <strong>User added. </strong><a href="admin/"> Dashboard</a>
                 </div>
             </div>
         <?php
@@ -14,7 +14,7 @@ if (isset($result)) {
     ?>
         <div class="container">
             <div class="alert alert-warning">
-                <strong>Ошибка!</strong> <?php echo $result[1];?><a href="registerForm"> Форма регистрации</a>
+                <strong>Error!</strong> <?php echo $result[1];?><a href="registerForm"> Registration Form</a>
             </div>
         </div>
     <?php

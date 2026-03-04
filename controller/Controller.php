@@ -34,28 +34,28 @@ class Controller {
         Comments::InsertComment($c,$id);
         //self::NewsByID($id);
         header('Location:news?id='.$id.'#ctable');
-        // $c-текст комментария, $id-номер новости, для которой добавлен комментарий
+        // $c-comment text, $id-news ID for which the comment is added
     }
 
-    // список комментариев
+    // comment list
     public static function Comments($newsid) {
         $arr = Comments::getCommentByNewsID($newsid);
         ViewComments::CommentsByNews($arr);
 
     }
-    // количество комментариев к новости
+    // number of comments for news
     public static function CommentsCount($newsid) {
         $arr = Comments::getCommentsCountByNewsID($newsid);
         ViewComments::CommentsCount($arr);
 
     }
-    // ссылка - переход к списку комментариев
+    // link - navigate to comment list
     public static function CommentsCountWithAncor($newsid) {
         $arr = Comments::getCommentsCountByNewsID($newsid);
         ViewComments::CommentsCountWithAncor($arr);
 
     }
-    // Регистрация
+    // Registration
     public static function registerForm() {
         include_once('view/formRegister.php');
     }

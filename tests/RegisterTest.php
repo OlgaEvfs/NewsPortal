@@ -7,12 +7,15 @@ require_once 'inc/Database.php';
 class RegisterTest extends TestCase
 {
     /**
-     * Тест: Успешная регистрация (Используем MOCK для базы данных)
+     * Test: Successful registration (Using MOCK for database)
      */
     public function testSuccessfulRegistration()
     {
         $dbMock = $this->createMock(Database::class);
 
+        // Expect getOne to return null (email doesn't exist)
+        $dbMock->method('getOne')->willReturn(null);
+        
         $dbMock->expects($this->once())
                ->method('executeRun')
                ->willReturn(true);
@@ -29,7 +32,7 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * Тест: Ошибка при несовпадении паролей
+     * Test: Password mismatch error
      */
     public function testPasswordsMustMatch()
     {
@@ -44,11 +47,11 @@ class RegisterTest extends TestCase
         );
 
         $this->assertFalse($result[0]);
-        $this->assertStringContainsString('Пароли не совпадают', $result[1]);
+        $this->assertStringContainsString('Passwords do not match', $result[1]);
     }
 
     /**
-     * Тест: Ошибка при невалидном email
+     * Test: Invalid email error
      */
     public function testInvalidEmail()
     {
@@ -64,6 +67,29 @@ class RegisterTest extends TestCase
         );
 
         $this->assertFalse($result[0]);
-        $this->assertStringContainsString('Неправильный email', $result[1]);
+        $this->assertStringContainsString('Incorrect email', $result[1]);
+    }
+
+    /**
+     * Test: Email already exists error
+     */
+    public function testEmailAlreadyExists()
+    {
+        $dbMock = $this->createMock(Database::class);
+
+        // Mock database finding an existing user
+        $dbMock->method('getOne')->willReturn(['email' => 'test@example.com']);
+        $dbMock->expects($this->never())->method('executeRun');
+
+        $result = Register::processRegistration(
+            'TestUser',
+            'test@example.com',
+            'password123',
+            'password123',
+            $dbMock
+        );
+
+        $this->assertFalse($result[0]);
+        $this->assertStringContainsString('This email is already registered', $result[1]);
     }
 }

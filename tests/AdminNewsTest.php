@@ -7,7 +7,7 @@ require_once 'inc/Database.php';
 class AdminNewsTest extends TestCase
 {
     /**
-     * Тест: Успешное добавление новости
+     * Test: Successful news addition
      */
     public function testProcessNewsAddSuccess()
     {
@@ -19,10 +19,10 @@ class AdminNewsTest extends TestCase
                ->willReturn(true);
 
         $result = modelAdminNews::processNewsAdd(
-            'Заголовок новости',
-            'Текст новости',
-            1, // ID категории
-            '', // Без картинки
+            'News title',
+            'News text',
+            1, // Category ID
+            '', // Without image
             $dbMock
         );
 
@@ -30,28 +30,28 @@ class AdminNewsTest extends TestCase
     }
 
     /**
-     * Тест: Ошибка при пустых полях (валидация)
+     * Test: Error on empty fields (validation)
      */
     public function testProcessNewsAddValidation()
     {
         $dbMock = $this->createMock(Database::class);
         
-        // Ожидаем, что БД вообще не будет вызвана
+        // Expect that the DB will not be called at all
         $dbMock->expects($this->never())->method('executeRun');
 
-        // Передаем пустой заголовок
-        $result = modelAdminNews::processNewsAdd('', 'Текст', 1, '', $dbMock);
+        // Pass an empty title
+        $result = modelAdminNews::processNewsAdd('', 'Text', 1, '', $dbMock);
         $this->assertFalse($result);
     }
 
     /**
-     * Тест: Редактирование новости БЕЗ изменения картинки
+     * Test: Editing news WITHOUT changing image
      */
     public function testProcessNewsEditNoImage()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Проверяем, что в SQL нет упоминания picture, если картинка пустая
+        // Check that there is no mention of picture in SQL if the image is empty
         $dbMock->expects($this->once())
                ->method('executeRun')
                ->with($this->logicalAnd(
@@ -60,18 +60,18 @@ class AdminNewsTest extends TestCase
                ))
                ->willReturn(true);
 
-        $result = modelAdminNews::processNewsEdit(5, 'Новый заголовок', 'Новый текст', 2, '', $dbMock);
+        $result = modelAdminNews::processNewsEdit(5, 'New title', 'New text', 2, '', $dbMock);
         $this->assertTrue($result);
     }
 
     /**
-     * Тест: Защита от XSS в заголовке
+     * Test: XSS protection in title
      */
     public function testProcessNewsAddXssProtection()
     {
         $dbMock = $this->createMock(Database::class);
 
-        // Заголовок с опасным скриптом
+        // Title with dangerous script
         $dangerousTitle = "<script>alert('XSS')</script>";
         $expectedSafeTitle = "&lt;script&gt;alert(&#039;XSS&#039;)&lt;/script&gt;";
 
@@ -80,11 +80,11 @@ class AdminNewsTest extends TestCase
                ->with($this->stringContains($expectedSafeTitle))
                ->willReturn(true);
 
-        modelAdminNews::processNewsAdd($dangerousTitle, 'Текст', 1, '', $dbMock);
+        modelAdminNews::processNewsAdd($dangerousTitle, 'Text', 1, '', $dbMock);
     }
 
     /**
-     * Тест: Удаление новости
+     * Test: News deletion
      */
     public function testProcessNewsDelete()
     {

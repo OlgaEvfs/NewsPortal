@@ -23,7 +23,7 @@
             <?php
             echo '<ul class="nav nav-pills pull-right">
             <li role="button">'.$_SESSION["name"].
-            '<a href="logout" style="display: inline;">Выйти <i class="fa fa-sign-out"></i>
+            '<a href="logout" style="display: inline;">Logout <i class="fa fa-sign-out"></i>
             </a></li></ul>';
 
             if (isset($_SESSION["status"]) && $_SESSION["status"]=="admin"){
@@ -34,7 +34,7 @@
                     echo ' &#187 <a href="newsAdmin">News List</a>'; 
                     echo ' </h4>';
             } else {
-                   echo '<h4>У вас нет прав!</h4>';
+                   echo '<h4>You have no rights!</h4>';
             }
             ?>
 

@@ -8,14 +8,14 @@
             if ($test == true) {
                 ?>
                     <div class="alert alert-info">
-                        <strong>Запись изменена.</strong><a href="newsAdmin">Список новостей</a>
+                        <strong>The record has been changed.</strong><a href="newsAdmin">News list</a>
                     </div>
                 <?php
             }
             else if ($test == false) {
                 ?>
                     <div class="alert alert-warning">
-                        <strong>Ошибка изменения записи!</strong><a href="newsAdmin">Список новостей</a>
+                        <strong>Error changing record!</strong><a href="newsAdmin">News list</a>
                     </div>
                 <?php
             }
@@ -68,10 +68,10 @@
                     <tr>
                         <td colspan="2">
                             <button type="submit" class="btn btn-primary" name="save">
-                                <span class="glyphicon glyphicon-plus"></span>Изменить
+                                <span class="glyphicon glyphicon-plus"></span>Change
                             </button>
                             <a href="newsAdmin" class="btn btn-large btn-success">
-                                <i class="glyphicon glyphicon-backward"></i> &nbsp;Назад к списку
+                                <i class="glyphicon glyphicon-backward"></i> &nbsp;Back to List
                             </a>
                         </td>
                     </tr>

@@ -20,13 +20,13 @@ class ViewComments {
     }
 
     public static function CommentsCountWithAncor($value) {
-        if ($value['count']>0)
-        echo '<b><a href="#ctable"/> ('.$value['count'].') </a></b>';
+        if ($value>0)
+        echo '<b><a href="#ctable"/> ('.$value.') </a></b>';
     }
 
     public static function CommentsCount($value) {
-        if ($value['count']>0) {
-            echo '<b><font color="red">('.$value['count'].') </font></b>';
+        if ($value>0) {
+            echo '<b><font color="red">('.$value.') </font></b>';
         }
     }
 

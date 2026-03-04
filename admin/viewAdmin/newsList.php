@@ -4,7 +4,7 @@
 
 <div class="container" style="min-height: 400px;">
     <div style="margin: 20px;">
-        <a class="btn btn-primary" href="newsAdd" role="button">Добавить новость</a>
+        <a class="btn btn-primary" href="newsAdd" role="button">Add news</a>
     </div>
     <div class="col-md-11">
         <table class="table table-bordered table-responsive">
@@ -21,7 +21,7 @@
             echo '<td>'.$row['id'].'</td>   ';
 
             echo '<td><b>Title:</b> '.$row['title'].'<br>';
-            echo '<b>Категория: </b><i>'.$row['name'].'</i>';
+            echo '<b>Category: </b><i>'.$row['name'].'</i>';
             echo '<br><b>Author: </b><i>'.$row['username'].'</i>';
             echo '</td>';
             echo '<td>
